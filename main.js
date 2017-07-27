@@ -12,6 +12,18 @@
 let button = document.querySelector(".button");
 let recipe = document.querySelector(".container");
 let rec = document.querySelector("#input");
+let body = document.querySelector("body");
+let audioSource = document.querySelector("audio");
+
+
+body.addEventListener("click", function playMusic(e) {
+    if(e.target && e.target.matches("img")){
+        console.log("you pressed a button", e.target);
+        audioSource.src = e.target.getAttribute('data-music');
+        audioSource.load();
+        audioSource.play();
+    }
+});
 
 button.addEventListener("click", function searchRecipes() {
 
@@ -26,23 +38,23 @@ button.addEventListener("click", function searchRecipes() {
           console.log(response.status);
           return;
         }
-        response.json().then(function(response) {
+        response.json().then(function(res) {
             console.log("results is:", response);
             let template = "";
-            response.results.forEach(function(data) {
+            res.results.forEach(function(data) {
               template += `
            <div recipe class="recipe">
-              <a href="${data.previewUrl}">
-              <img src="${data.artworkUrl100}"
-            </a>
+
+              <img src="${data.artworkUrl100}" data-music="${data.previewUrl}">
+
             <p>${data.trackName}</p><h2>${data.artistName}</h2></div>`;
               recipe.innerHTML = template;
             });
+
           })
             .catch(function(err) {
               console.log("Fetch Error :-S", err);
           })
-      }
-    );
+      });
 
 })
